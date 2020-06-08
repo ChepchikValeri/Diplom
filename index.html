@@ -15,6 +15,7 @@
 	<script src="helpers.js"></script>
 	<script src="jquery.csv.js"></script>
 	<script src="regression.min.js"></script>
+	<script src="functions.js"></script>
 </head>
 <body>
 	<div class="wrapper">
@@ -27,18 +28,6 @@
 		</header>
 		<div class="content">
 			<div class="container">
-				<div class="formula__container">
-					<div class="formula__description">Formula 1</div>
-					<div class="formula__body">a+b-c</div>
-				</div>
-				<div class="variable__container">
-					<div class="variable__name">v1 = </div>
-					<input type="number" class="variable__value" value="1">
-				</div>
-				<div class="variable__container">
-					<div class="variable__name">v2 = </div>
-					<input type="number" class="variable__value" value="2">
-				</div>
 				<div class="chart__container">
 					<canvas id="overlay" style="position:absolute;pointer-events:none;"></canvas>
 					<canvas class="chart" id="chart_1"></canvas>
@@ -47,13 +36,38 @@
 				<div class="chart__container">
 					<canvas class="chart" id="chart_2"></canvas>
 				</div>
-				<form>
-					<input type="button" value="Fit Lin Reg" onclick="drawLinReg(chart_2, 0, 1)">
-				</form>
-				<div class="button">Draw Sine</div>
-				<div class="button">Auto x & y</div>
-				<div class="button">Combine sine & line reg</div>
-				<div class="button">Analysis</div>
+				<br>
+				<div class="buttons__container noselect">
+					<div class="button" onclick="drawLinReg(chart_2, 0, 1)"><span>Fit Lin Reg</span></div>
+					<div class="button"><span>Fit Sine</span></div>
+					<div class="button"><span>bbb</span></div>
+					<div class="button"><span>ccc</span></div>
+					<div class="button" onclick="removeData(chart, 0);chart.update(); removeData(chart_2, 0); removeDataset(chart_2, 1); chart_2.update();"><span>Clear Charts</span></div>
+				</div>
+				<div class="formula__body">F = <span id="formula__sinA">sinA</span> * sin(Math.PI * (<span id="formula__x">x</span> - <span id="formula__sinXC">sinXC</span>) / <span id="formula__sinW">sinW</span>)) + (<span id="formula__linA">linA</span> + <span id="formula__linB">linB</span>*x)</div>
+				<div class="variable__container">
+					<div class="variable">
+						<div id="var__sinA" class="variable__description">SinA</div>
+						<input type="number" class="" value="">
+					</div>
+					<div class="variable">
+						<div id="var__sinXC" class="variable__description">SinXC</div>
+						<input type="number" class="" value="">
+					</div>
+					<div class="variable">
+						<div id="var__sinW" class="variable__description">SinW</div>
+						<input type="number" class="" value="">
+					</div>
+					<div class="variable">
+						<div id="var__linA" class="variable__description">LinA</div>
+						<input type="number" class="" value="">
+					</div>
+					<div class="variable">
+						<div id="var__linB" class="variable__description">LinB</div>
+						<input type="number" class="" value="">
+					</div>
+				</div>
+
 				<hr>
 		        <h2>Input</h2>
 		        <input type="file" id="files" name="files[]" multiple />
@@ -61,7 +75,6 @@
 		        <h2>FileInfo</h2>
 		        <div id="file-info"></div>
 		        <hr />
-		        <input type="button" value="Delete Data" onclick="removeData(chart, 0);chart.update(); removeData(chart_2, 0); removeDataset(chart_2, 1); chart_2.update();">
 			</div>
 		</div>
 	</div>

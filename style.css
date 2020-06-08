@@ -1,9 +1,19 @@
 /*Null*/
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 *,*:before,*:after{
   padding: 0;
   margin: 0;
   border: 0;
   box-sizing: border-box;
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 html,body{
   height: 100%;
@@ -31,12 +41,8 @@ html,body{
   margin: 30px 0px 0px 0px;
   text-align: center;
 }
-.variable__name, .variable__value {
-  display: inline-block;
-}
-.variable__value {
-  border: 1px blue;
-}
+
+
 .chart__container {
   max-width: 800px;
   max-height: 600px;
@@ -44,4 +50,35 @@ html,body{
 .chart {
   max-width: inherit;
   max-height: inherit;
+}
+.buttons__container {
+  width: 100%;
+  display: inline-flex;
+}
+
+.button {
+  padding: 20px 0px 20px 0px;
+  margin:  0 auto;
+    position: relative;
+    background: #f3f0f1;
+    margin-bottom: 25px;
+    border-radius: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+.button:hover {
+  background: red;
+}
+.variable {
+  text-align: center;
+  display: inline-block;
+}
+.variable input {
+  margin: 20px 0px 20px 0px;
+  border: 3px solid lightgray;
+}
+.variable__container {
+  margin-top: 20px;
+  display: block;
 }

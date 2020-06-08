@@ -7,35 +7,36 @@ function addData(chart, data) {
 
 function removeData(chart, datasetIndex) {
     chart.data.datasets[datasetIndex].data = [];
+    
 }
-function removeDataset(chart, datasetIndex) {
-    if (chart.data.datasets[datasetIndex] != undefined) {
-      chart.data.datasets.splice(datasetIndex);
+// enable syntax highlighting
+//chart js
+
+//var ctx = document.getElementById('chart_1');
+//var chart = new Chart(ctx, {
+  options = {
+    type: 'scatter',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'cm-1',
+            borderDash: [5, 5],
+            borderWidth: 1,
+            borderColor: '#922893',
+            pointBorderColor: '#922893',
+            showLine: true,
+            data: []
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                }
+            }]
+        }
     }
-}
-options = {
-  type: 'scatter',
-  data: {
-      labels: [],
-      datasets: [{
-          label: 'cm-1',
-          borderDash: [5, 5],
-          borderWidth: 1,
-          borderColor: '#922893',
-          pointBorderColor: '#922893',
-          showLine: true,
-          data: []
-      }]
-  },
-  options: {
-      scales: {
-          yAxes: [{
-              ticks: {
-              }
-          }]
-      }
-  }
-}
+}//);
 options_zoom = {
     type: 'scatter',
     data: {
@@ -120,9 +121,7 @@ function handleDialog(event) {
   reader.onload = function(event){
     let csv = event.target.result;
     let chart_data = $.csv.toArrays(csv);
-    let tmpFloat = chart_data.map(data => [parseFloat(data[0]), parseFloat(data[1])]);
-    chart_data = tmpFloat;
-    chart_data_minimized = [];
+    chart_data_minimized = []
     for (let i = 0; i < chart_data.length; i++) {
       let tmp = 0;
       let count = 0;
@@ -152,12 +151,10 @@ function handleDialog(event) {
       }
     }
     removeData(chart, 0);
-    //console.log(chart_data_minimized)
+    console.log(chart_data)
     chart_data_minimized.forEach(data => {addData(chart, {x:data[0],  y:data[1]})})
     chart.update();
   }
-  //delete files from input, so it can load again the same file
-  document.getElementById('files').value = "";
 }   
 
 
@@ -176,10 +173,7 @@ var selectionRect = {
   startY: 0
 };
 var drag = false;
-var handlePointerDown = function(evt) {
-  if (chart.data.datasets[0].data.length == 0) {
-    return;
-  }
+canvas.addEventListener('pointerdown', evt => {
   const points = chart.getElementsAtEventForMode(evt, 'index', {
     intersect: false
   });
@@ -189,41 +183,31 @@ var handlePointerDown = function(evt) {
   selectionRect.startY = chart.chartArea.top;
   drag = true;
   // save points[0]._index for filtering
-}
-
-
-var handlePointerMove = function(evt) {
-  if (chart.data.datasets[0].data.length == 0) {
-    return;
-  }
-  const rect = canvas.getBoundingClientRect();
-  if (drag) {
+  });
+  canvas.addEventListener('pointermove', evt => {
     const rect = canvas.getBoundingClientRect();
-    selectionRect.w = (evt.clientX - rect.left) - selectionRect.startX;
-    selectionContext.globalAlpha = 0.5;
-    selectionContext.clearRect(0, 0, canvas.width, canvas.height);
-    selectionContext.fillRect(selectionRect.startX,
-    selectionRect.startY,
-    selectionRect.w,
-    chart.chartArea.bottom - chart.chartArea.top);
-  } 
-  else {
-    selectionContext.clearRect(0, 0, canvas.width, canvas.height);
-    var x = evt.clientX - rect.left;
-    if (x > chart.chartArea.left) {
-      selectionContext.fillRect(x,
-      chart.chartArea.top,
-      1,
+    if (drag) {
+      const rect = canvas.getBoundingClientRect();
+      selectionRect.w = (evt.clientX - rect.left) - selectionRect.startX;
+      selectionContext.globalAlpha = 0.5;
+      selectionContext.clearRect(0, 0, canvas.width, canvas.height);
+      selectionContext.fillRect(selectionRect.startX,
+      selectionRect.startY,
+      selectionRect.w,
       chart.chartArea.bottom - chart.chartArea.top);
+    } 
+    else {
+      selectionContext.clearRect(0, 0, canvas.width, canvas.height);
+      var x = evt.clientX - rect.left;
+      if (x > chart.chartArea.left) {
+        selectionContext.fillRect(x,
+        chart.chartArea.top,
+        1,
+        chart.chartArea.bottom - chart.chartArea.top);
+      }
     }
-  }
-}
-
-
-var handlePointerUp = function (evt) {
-  if (chart.data.datasets[0].data.length == 0) {
-    return;
-  }
+  });
+canvas.addEventListener('pointerup', evt => {
   const points = chart.getElementsAtEventForMode(evt, 'index', {
     intersect: false
   });
@@ -240,11 +224,9 @@ var handlePointerUp = function (evt) {
   chart_data_minimized.slice(zoom_startIndex, zoom_stopIndex).forEach(data => {addData(chart_zoom, {x:data[0], y:data[1]})})
   //chart_zoom.options.scales.yAxes[0].ticks.Min = 10;
   chart_zoom.update();
-  console.log('implement filter between ' + options.data.datasets[0].data[zoom_startIndex].x + ' and ' + options.data.datasets[0].data[zoom_stopIndex].x);
-}
-canvas.addEventListener('pointerdown', handlePointerDown, false);
-canvas.addEventListener('pointermove', handlePointerMove, false);
-canvas.addEventListener('pointerup', handlePointerUp, false);
+  console.log('implement filter between ' + options.data.datasets[0].data[zoom_startIndex].x + ' and ' + options.data.datasets[0].data[zoom_stopIndex].x);  
+});
+
 
 
 
@@ -264,12 +246,6 @@ var selectionRect_2 = {
 };
 var drag_2 = false;
 canvas_2.addEventListener('pointerdown', evt => {
-  if (chart_2.data.datasets[0].data.length == 0) {
-    return;
-  }
-  if (typeof chart_2.data.datasets[1] != "undefined") {
-    removeDataset(chart_2,1);
-  }
   const points_2 = chart_2.getElementsAtEventForMode(evt, 'index', {
     intersect: false
   });
@@ -281,9 +257,6 @@ canvas_2.addEventListener('pointerdown', evt => {
   // save points_2[0]._index for filtering
 });
 canvas_2.addEventListener('pointermove', evt => {
-  if (chart_2.data.datasets[0].data.length == 0) {
-    return;
-  }
   const rect_2 = canvas_2.getBoundingClientRect();
   if (drag_2) {
     const rect_2 = canvas_2.getBoundingClientRect();
@@ -307,9 +280,6 @@ canvas_2.addEventListener('pointermove', evt => {
   }
 });
 canvas_2.addEventListener('pointerup', evt => {
-  if (chart_2.data.datasets[0].data.length == 0) {
-    return;
-  }
   const points_2 = chart_2.getElementsAtEventForMode(evt, 'index', {
     intersect: false
   });
@@ -329,30 +299,3 @@ canvas_2.addEventListener('pointerup', evt => {
   chart_zoom.update();
   console.log('implement filter between ' + options.data.datasets[0].data[zoom_startIndex].x + ' and ' + options.data.datasets[0].data[zoom_stopIndex].x);    
 });
-function linReg(data) {
-  const my_regression = regression.linear(data.map(element => [element.x, element.y]));
-  //console.log(my_regression);
-  return my_regression;
-}
-function drawLinReg(chart,datasetData, datasetRegression) {
-  if (chart.data.datasets[datasetData].data.length == 0) {
-    alert("there's no data to draw linear regression!");
-    return;
-  }
-  reg = linReg(chart.data.datasets[datasetData].data);
-  console.log("drawing on chart 2 dataset data = " + datasetData + "datasetRegression = " + datasetRegression);
-  prediction = chart.data.datasets[datasetData].data.map(element => {return {x: reg.predict(element.x)[0], y: reg.predict(element.x)[1]}});
-  console.log(prediction);
-  chart.data.datasets[datasetRegression] = ({data:prediction, label: "Line regression", type:'scatter', showLine: true});
-  chart.update();
-}
-
-//variables to address variables on webpage
-let sinASpan = document.getElementById("formula__sinA");
-let xSpan    = document.getElementById("formula__X");
-let sinXCSpan= document.getElementById("formula__sinXC");
-let sinWSpan = document.getElementById("formula__sinW");
-let linASpan = document.getElementById("formula__linA");
-let linBSpan = document.getElementById("formula__linB");
-
-//Event listeners to highlight variables in formula
